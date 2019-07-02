@@ -7,7 +7,8 @@ class AddContact extends Component {
   state = {
     name: '',
     email: '',
-    phone: ''
+    phone: '',
+    errors: {}
   };
   onInput = (e) => {
     this.setState({[e.target.name]: e.target.value})
@@ -15,6 +16,24 @@ class AddContact extends Component {
   onSubmit = (e, dispatch) => {
     e.preventDefault();
     const {name, email, phone } = this.state;
+    if (name === '') {
+      this.setState({
+        errors: {name: 'Name is required'}
+      });
+      return;
+    }
+    if (email === '') {
+      this.setState({
+        errors: {email: 'Email is required'}
+      });
+      return;
+    }
+    if (phone === '') {
+      this.setState({
+        errors: {phone: 'Phone is required'}
+      });
+      return;
+    }
     const newContact = {
       id: uuid(),
       name,
@@ -28,11 +47,12 @@ class AddContact extends Component {
     this.setState({
       name:'',
       email:'',
-      phone: ''
+      phone: '',
+      errors: {}
     });
   };
   render() {
-    const {name, email, phone} = this.state;
+    const {name, email, phone, errors} = this.state;
     return  (
       <Consumer>
         {value => {
@@ -48,21 +68,24 @@ class AddContact extends Component {
                     name="name"
                     placeholder="Enter name"
                     value={name}
-                    onChange={(e) => this.onInput(e)} />
+                    onChange={(e) => this.onInput(e)}
+                    error={errors.name}/>
                     <TextInputGroup
                       label="Email"
                       type="email"
                       name="email"
                       placeholder="Enter email"
                       value={email}
-                      onChange={(e) => this.onInput(e)} />
+                      onChange={(e) => this.onInput(e)}
+                      error={errors.email}/>
                     <TextInputGroup
                       label="Phone"
                       type ="phone"
                       name="phone"
                       placeholder="Enter phone"
                       value={phone}
-                      onChange={(e) => this.onInput(e)} />
+                      onChange={(e) => this.onInput(e)}
+                      error={errors.phone}/>
                   <input type="submit" className="btn btn-light btn-block"/>
                 </form>
               </div>
